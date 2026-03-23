@@ -1,0 +1,25 @@
+<div class="course-container">
+  <div class="course-header">
+    <h1 class="course-title">Courses</h1>
+    <a routerLink="/courses/create">Add Course</a>
+  </div>
+
+  @if (courses.length === 0) {
+    <p class="course-description">No courses yet. Click "Add Course" to get started.</p>
+  }
+
+  <div class="course-details">
+    @for (course of courses; track course.id) {
+      <div class="course-detail">
+        <h3>
+          <a [routerLink]="['/courses', course.id]">{{ course.title }}</a>
+        </h3>
+        <p>Instructor: {{ course.instructor }}</p>
+        <p>Credits: {{ course.credits }}</p>
+        <p>Status: {{ course.isCompleted ? 'Completed' : 'In Progress' }}</p>
+        <button [routerLink]="['/courses', course.id]">Edit</button>
+        <button (click)="deleteCourse(course.id)">Delete</button>
+      </div>
+    }
+  </div>
+</div>

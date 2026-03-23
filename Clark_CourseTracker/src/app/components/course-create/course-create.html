@@ -1,0 +1,30 @@
+<div class="course-create-container">
+  <div class="course-create-header">
+    <h1 class="course-create-title">Create Course</h1>
+  </div>
+
+  <div class="course-create-form">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input id="title" type="text" [(ngModel)]="title" />
+    </div>
+
+    <div class="form-group">
+      <label for="instructor">Instructor</label>
+      <input id="instructor" type="text" [(ngModel)]="instructor" />
+    </div>
+
+    <div class="form-group">
+      <label for="credits">Credits</label>
+      <input id="credits" type="number" [(ngModel)]="credits" />
+    </div>
+
+    <div class="form-group">
+      <label for="isCompleted">Completed</label>
+      <input id="isCompleted" type="checkbox" [(ngModel)]="isCompleted" />
+    </div>
+
+    <button class="submit-button" (click)="onCreate()">Create Course</button>
+    <button (click)="onCancel()">Cancel</button>
+  </div>
+</div>

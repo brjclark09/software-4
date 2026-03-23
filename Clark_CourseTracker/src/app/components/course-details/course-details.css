@@ -1,0 +1,123 @@
+/* ===== Course Details / Edit Page ===== */
+
+.course-details-container {
+  animation: fadeIn 0.25s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.course-details-header {
+  margin-bottom: 1.5rem;
+}
+
+.course-details-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+
+.course-details-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.content-section {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.35rem;
+}
+
+.form-group input[type='text'],
+.form-group input[type='number'] {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.925rem;
+  color: #1e293b;
+  background-color: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-group input[type='text']:focus,
+.form-group input[type='number']:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  background-color: #ffffff;
+}
+
+.form-group input[type='checkbox'] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: #2563eb;
+  cursor: pointer;
+  margin-top: 0.2rem;
+}
+
+.content-section p {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.course-details-container > p {
+  color: #64748b;
+  margin-bottom: 1.25rem;
+}
+
+.course-details-container > button {
+  border-radius: 6px;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.925rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  margin-right: 0.75rem;
+  border: none;
+}
+
+.course-details-container > button:first-of-type {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.course-details-container > button:first-of-type:hover {
+  background-color: #1d4ed8;
+}
+
+.course-details-container > button:last-of-type {
+  background-color: transparent;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+
+.course-details-container > button:last-of-type:hover {
+  background-color: #f1f5f9;
+  color: #334155;
+}
