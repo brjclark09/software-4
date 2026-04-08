@@ -1,0 +1,26 @@
+<div class="movies-container">
+  @if (loading$ | async) {
+    <p class="loading">Loading...</p>
+  } @else {
+    <div class="movies-grid">
+      @for (movie of (movies$ | async); track movie.id) {
+        <div class="movie-card" (click)="onMovieClick(movie)">
+          <img [src]="movie.posterPath" [alt]="movie.title" />
+          <div class="movie-info">
+            <h3>{{ movie.title }}</h3>
+            <p class="director">Directed by {{ movie.director }}</p>
+            <div class="movie-meta">
+              <span class="genre-tag">{{ movie.genre }}</span>
+              <span class="year">{{ movie.releaseYear }}</span>
+              <span class="rating">⭐ {{ movie.rating }}</span>
+            </div>
+            <p class="stream-status" [class.available]="movie.isAvailableToStream" [class.unavailable]="!movie.isAvailableToStream">
+              {{ movie.isAvailableToStream ? 'Available to Stream' : 'Not Available to Stream' }}
+            </p>
+            <p class="description">{{ movie.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
