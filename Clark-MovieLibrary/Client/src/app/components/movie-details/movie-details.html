@@ -1,0 +1,54 @@
+<div class="details-page">
+  <button class="btn-back" (click)="goBack()">&#8592; Back</button>
+
+  @if (loading$ | async) {
+    <p class="loading">Loading...</p>
+  } @else if (movie$ | async; as movie) {
+    <div class="details-card">
+      <div class="poster-col">
+        <img [src]="movie.posterPath" [alt]="movie.title" />
+      </div>
+
+      <div class="info-col">
+        <h1>{{ movie.title }}</h1>
+        <p class="director">Directed by {{ movie.director }}</p>
+
+        <div class="meta-tags">
+          <span class="tag">{{ movie.genre }}</span>
+          <span class="tag">{{ movie.releaseYear }}</span>
+          <span class="tag rating-tag">⭐ {{ movie.rating }}</span>
+        </div>
+
+        <p class="stream-status" [class.available]="movie.isAvailableToStream" [class.unavailable]="!movie.isAvailableToStream">
+          {{ movie.isAvailableToStream ? 'Available to Stream' : 'Not Available to Stream' }}
+        </p>
+
+        <hr />
+
+        <h2>Description</h2>
+        <p class="description">{{ movie.description }}</p>
+
+        <hr />
+
+        <div class="detail-grid">
+          <div class="detail-cell">
+            <span class="detail-label">Director</span>
+            <span class="detail-value">{{ movie.director }}</span>
+          </div>
+          <div class="detail-cell">
+            <span class="detail-label">Release Year</span>
+            <span class="detail-value">{{ movie.releaseYear }}</span>
+          </div>
+          <div class="detail-cell">
+            <span class="detail-label">Genre</span>
+            <span class="detail-value">{{ movie.genre }}</span>
+          </div>
+          <div class="detail-cell">
+            <span class="detail-label">Rating</span>
+            <span class="detail-value">{{ movie.rating }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
