@@ -19,6 +19,16 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<SeedingService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
@@ -37,11 +47,11 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowAngular");
 
 app.UseAuthorization();
 

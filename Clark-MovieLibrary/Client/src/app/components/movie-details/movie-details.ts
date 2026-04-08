@@ -19,7 +19,9 @@ export class MovieDetails implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('movieId'));
-    this.movieService.getMovieById(id).subscribe();
+    this.movieService.getMovieById(id).subscribe({
+      error: () => this.router.navigate(['/not-found'])
+    });
   }
 
   goBack(): void {

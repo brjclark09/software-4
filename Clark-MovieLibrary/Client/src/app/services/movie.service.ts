@@ -7,7 +7,7 @@ import { Movie } from '../models/movie.model';
   providedIn: 'root'
 })
 export class MovieService {
-  private readonly apiUrl = 'http://localhost:5000/api/movies';
+  private readonly apiUrl = 'http://localhost:5281/api/movies/';
 
   private moviesSubject = new BehaviorSubject<Movie[]>([]);
   movies$ = this.moviesSubject.asObservable();
@@ -25,7 +25,7 @@ export class MovieService {
 
   getAllMovies(): Observable<Movie[]> {
     this.loadingSubject.next(true);
-    return this.http.get<Movie[]>(this.apiUrl).pipe(
+    return this.http.get<Movie[]>(`${this.apiUrl}`).pipe(
       tap({
         next: (movies) => {
           this.moviesSubject.next(movies);
@@ -38,7 +38,7 @@ export class MovieService {
 
   getMovieById(movieId: number): Observable<Movie> {
     this.loadingSubject.next(true);
-    return this.http.get<Movie>(`${this.apiUrl}/${movieId}`).pipe(
+    return this.http.get<Movie>(`${this.apiUrl}${movieId}`).pipe(
       tap({
         next: (movie) => {
           this.selectedMovieSubject.next(movie);
@@ -52,7 +52,7 @@ export class MovieService {
   searchMovies(title: string): Observable<Movie[]> {
     this.loadingSubject.next(true);
     const params = new HttpParams().set('title', title);
-    return this.http.get<Movie[]>(`${this.apiUrl}/search`, { params }).pipe(
+    return this.http.get<Movie[]>(`${this.apiUrl}search`, { params }).pipe(
       tap({
         next: (movies) => {
           this.searchResultsSubject.next(movies);

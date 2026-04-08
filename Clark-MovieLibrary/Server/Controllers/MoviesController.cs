@@ -28,7 +28,7 @@ public class MoviesController : ControllerBase
     public async Task<ActionResult<IEnumerable<Movie>>> SearchMovies([FromQuery] string title)
     {
         return await _context.Movies
-            .Where(m => m.Title.Contains(title, StringComparison.OrdinalIgnoreCase))
+            .Where(m => EF.Functions.Like(m.Title, $"%{title}%"))
             .ToListAsync();
     }
 
