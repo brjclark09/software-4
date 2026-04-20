@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace WordGame.Models;
+namespace WordGame.Server.Models;
 
 public class WordList
 {

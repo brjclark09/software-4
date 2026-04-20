@@ -148,3 +148,17 @@
 /home/brandon/git/software-4/Clark_WordGame/WordGame.Server/obj/Debug/net8.0/WordGame.Server.pdb
 /home/brandon/git/software-4/Clark_WordGame/WordGame.Server/obj/Debug/net8.0/WordGame.Server.genruntimeconfig.cache
 /home/brandon/git/software-4/Clark_WordGame/WordGame.Server/obj/Debug/net8.0/ref/WordGame.Server.dll
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.csproj.AssemblyReference.cache
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.AssemblyInfoInputs.cache
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.AssemblyInfo.cs
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.csproj.CoreCompileInputs.cache
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.RazorAssemblyInfo.cache
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.RazorAssemblyInfo.cs
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.sourcelink.json
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.dll
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\refint\WordGame.Server.dll
+C:\Users\w3031836\Documents\GitHub\software-4\Clark_WordGame\WordGame.Server\obj\Debug\net8.0\WordGame.Server.pdb

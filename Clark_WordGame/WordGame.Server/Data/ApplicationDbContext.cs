@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using WordGame.Models;
 using WordGame.Server.Models;
 
 namespace WordGame.Server.Data;

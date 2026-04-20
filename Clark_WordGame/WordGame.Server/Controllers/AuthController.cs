@@ -1,39 +1,174 @@
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WordGame.Models;
-using WordGame.Server.Dtos;
+using System.Text.Encodings.Web;
+using AutoMapper;
+using Microsoft.Extensions.Options;
+using System.Text;
 using WordGame.Server.Models;
+using WordGame.Server.Dtos;
+using WordGame.Server.Data;
 
-[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly ApplicationDbContext _context;
+    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UrlEncoder _urlEncoder;
+    private readonly IConfiguration _config;
+    private readonly JwtSettings _jwtSettings;
+    private readonly IMapper _mapper;
 
-    public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
-    {
+    public AuthController(
+        ApplicationDbContext context,
+        UserManager<IdentityUser> userManager,
+        SignInManager<IdentityUser> signInManager,
+        UrlEncoder urlEncoder,
+        IConfiguration config,
+        IOptions<JwtSettings> jwtSettings,
+        IMapper mapper
+    ) {
+        _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
+        _urlEncoder = urlEncoder;
+        _config = config;
+        _jwtSettings = jwtSettings.Value;
+        _mapper = mapper;
     }
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] EmailLoginDetails details)
+    public async Task<IActionResult> RegisterWithEmail(EmailLoginDetails details) {
+        AuthResult authResult = await RegisterWithEmail(Request, details);
+
+        if (authResult.HasErrors) {
+            return BadRequest(authResult.Errors);
+        }
+
+        return Ok();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<IActionResult> LoginWithEmail(EmailLoginDetails details)
     {
-        var user = new ApplicationUser { UserName = details.Email, Email = details.Email };
-        var result = await _userManager.CreateAsync(user, details.Password);
+        var user = await _userManager.FindByEmailAsync(details.Email);
+        if (user == null)
+            return Unauthorized("Wrong email or password.");
 
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
+        var result = await _signInManager.PasswordSignInAsync(details.Email, details.Password, details.RememberMe, false).ConfigureAwait(false);
+        if (result.Succeeded) {
 
-        return Ok(new UserDto
-        {
-            UserId = user.Id,
-            Email = user.Email!
-        });
+            var token = this.GenerateJwtToken(user);
+
+            UserDto userDto = _mapper.Map<UserDto>(user);
+
+            return Ok(new { success = true, user = userDto, emailConfirmed = true, requires2fa = false, accessToken = token });
+        }
+        if (result.RequiresTwoFactor) {
+            return Ok(new { success = true, emailConfirmed = true, requires2fa = true });
+        }
+        if (result.IsLockedOut) {
+            return Ok(new { success = false, isLockedOut = true });
+        }
+
+        return Unauthorized();
+    }
+
+    [HttpPost("sign-in-with-token")]
+    public async Task<IActionResult> SignInWithToken() {
+        // Extract the token from the Authorization header
+        var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+        if (token == null) {
+            return Unauthorized(new { message = "Token is missing" });
+        }
+
+        // Validate the token here (this is a simplified approach)
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = new TokenValidationParameters {
+            ValidateIssuerSigningKey = true,
+            // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"])),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)),
+            ValidateIssuer = true,
+            // ValidIssuer = _config["Jwt:Issuer"],
+            ValidIssuer = _jwtSettings.Issuer,
+            ValidateAudience = true,
+            // ValidAudience = _config["Jwt:Audience"],
+            ValidAudience = _jwtSettings.Audience,
+            ValidateLifetime = true, // Ensure the token hasn't expired
+            ClockSkew = TimeSpan.Zero // Optional: reduce or remove clock skew allowance
+        };
+
+        try {
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (null == user) {
+                return Unauthorized(new { message = "Invalid token" });
+            }
+
+            var newToken = GenerateJwtToken(user);
+
+            UserDto userDto = _mapper.Map<UserDto>(user);
+
+            return Ok(new { message = "Token is valid", user = userDto, accessToken = newToken });
+        } catch {
+            return Unauthorized(new { message = "Invalid token" });
+        }
+    }
+
+    private string GenerateJwtToken(IdentityUser user) {
+        if (null == user) {
+            throw new ArgumentNullException(nameof(user));
+        }
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var now = DateTime.UtcNow;
+        var clockSkewMinutes = 5;
+        var expires = now.AddMinutes(_jwtSettings.ExpiresInMinutes);
+        var notBefore = now.AddMinutes(-clockSkewMinutes); // Subtracting for clock skew
+
+        var tokenDescriptor = new SecurityTokenDescriptor {
+            Subject = new ClaimsIdentity(new[]
+            {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Email),
+        }),
+            Expires = expires,
+            SigningCredentials = creds,
+            Issuer = _jwtSettings.Issuer,
+            Audience = _jwtSettings.Audience
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return tokenHandler.WriteToken(token);
+    }
+
+    private async Task<AuthResult> RegisterWithEmail(HttpRequest request, EmailLoginDetails details) {
+        AuthResult? authResult = new AuthResult();
+        IdentityUser? user = new IdentityUser { UserName = details.Email, Email = details.Email };
+        IdentityResult? result = await _userManager.CreateAsync(user, details.Password);
+
+        if (!result.Succeeded) {
+            authResult.Errors = result.Errors.Select(identityError => identityError.Description).ToList();
+
+            return authResult;
+        }
+
+        authResult.Success = true;
+        return authResult;
     }
 
     [HttpPost("logout")]
@@ -41,24 +176,5 @@ public class AuthController : ControllerBase
     {
         await _signInManager.SignOutAsync();
         return Ok("Logged out successfully.");
-    }
-
-    [AllowAnonymous]
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] EmailLoginDetails details)
-    {
-        var user = await _userManager.FindByEmailAsync(details.Email);
-        if (user == null)
-            return Unauthorized();
-
-        var result = await _signInManager.CheckPasswordSignInAsync(user, details.Password, lockoutOnFailure: false);
-        if (!result.Succeeded)
-            return Unauthorized();
-
-        return Ok(new UserDto
-        {
-            UserId = user.Id,
-            Email = user.Email!
-        });
     }
 }

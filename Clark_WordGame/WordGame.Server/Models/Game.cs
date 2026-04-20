@@ -1,4 +1,4 @@
-using WordGame.Models;
+using WordGame.Server.Models;
 
 namespace WordGame.Server.Models;
 

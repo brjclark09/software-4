@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WordGame.Models;
 using WordGame.Server.Data;
 using WordGame.Server.Dtos;
 using WordGame.Server.Models;
