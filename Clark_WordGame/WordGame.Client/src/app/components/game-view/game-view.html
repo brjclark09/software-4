@@ -1,0 +1,38 @@
+@if (game(); as g) {
+  <div class="flex flex-col items-center mt-10">
+
+    <h2 class="text-2xl font-bold mb-6">Guesses Remaining: {{ g.remainingGuesses }}</h2>
+
+    <p class="text-4xl font-bold tracking-widest mb-6 font-mono">{{ spaced(g.view) }}</p>
+
+    <p class="text-lg font-bold mb-1">Previous Guesses:</p>
+    <p class="mb-6 tracking-widest font-mono">{{ spaced(g.guesses) }}</p>
+
+    @if (g.status === 'Unfinished') {
+      <input
+        type="text"
+        [(ngModel)]="guess"
+        maxlength="1"
+        class="border border-gray-300 rounded px-4 py-2 w-64 text-center text-lg mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      @if (errorMessage) {
+        <p class="text-red-500 text-sm mb-2">{{ errorMessage }}</p>
+      }
+      <button
+        (click)="submitGuess()"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded transition-colors"
+      >
+        Guess
+      </button>
+    } @else {
+      <p class="text-xl font-bold underline mb-2">Answer:</p>
+      <p class="text-4xl font-bold tracking-widest font-mono mb-4">{{ spaced(g.answer!) }}</p>
+      @if (g.status === 'Win') {
+        <p class="text-4xl font-bold text-green-500">Win</p>
+      } @else {
+        <p class="text-4xl font-bold text-red-500">Loss</p>
+      }
+    }
+
+  </div>
+}

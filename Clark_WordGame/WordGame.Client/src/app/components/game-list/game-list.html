@@ -1,0 +1,52 @@
+<div class="flex justify-center mt-5 mb-4">
+  <button
+    (click)="newGame()"
+    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded transition-colors"
+  >
+    New Game
+  </button>
+</div>
+
+<table class="w-full text-sm">
+  <thead>
+    <tr class="border-b border-gray-200 text-gray-400 text-xs uppercase">
+      <th class="text-left font-medium px-4 py-3 w-32">Game ID</th>
+      <th class="text-left font-medium px-4 py-3 w-64">Phrase</th>
+      <th class="text-left font-medium px-4 py-3 w-36">Remaining</th>
+      <th class="text-left font-medium px-4 py-3 w-64">Answer</th>
+      <th class="text-left font-medium px-4 py-3 w-36">Status</th>
+      <th class="px-4 py-3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (game of games(); track game.id) {
+      <tr class="border-b border-gray-100">
+        <td class="px-4 py-4">
+          <a [routerLink]="['/wordgame', game.id]" class="text-blue-600 hover:underline">{{ game.id }}</a>
+        </td>
+        <td class="px-4 py-4 font-mono tracking-widest">{{ spaced(game.view) }}</td>
+        <td class="px-4 py-4 text-gray-800">{{ game.remainingGuesses }}</td>
+        <td class="px-4 py-4 font-mono tracking-widest text-gray-800">
+          {{ game.answer ? spaced(game.answer) : '' }}
+        </td>
+        <td class="px-4 py-4">
+          @if (game.status === 'Win') {
+            <span class="text-green-600 font-medium">Win</span>
+          } @else if (game.status === 'Loss') {
+            <span class="text-red-500 font-medium">Loss</span>
+          } @else {
+            <span class="text-gray-800">Unfinished</span>
+          }
+        </td>
+        <td class="px-4 py-4 text-right">
+          <button
+            (click)="deleteGame(game.id)"
+            class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-1.5 rounded transition-colors"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

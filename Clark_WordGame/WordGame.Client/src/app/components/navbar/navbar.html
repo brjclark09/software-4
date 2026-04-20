@@ -1,0 +1,16 @@
+<nav class="bg-blue-500 px-6 py-3 flex items-center justify-between">
+  <div class="flex gap-6">
+    <a routerLink="/" class="text-white font-medium">Home</a>
+    @if (userState.isLoggedIn()) {
+      <a routerLink="/game" class="text-white font-medium">Word Game</a>
+    }
+  </div>
+  <div class="flex gap-6">
+    @if (userState.isLoggedIn()) {
+      <button (click)="logout()" class="text-white font-medium cursor-pointer">Logout</button>
+    } @else {
+      <a routerLink="/auth/register" class="text-white font-medium">Register</a>
+      <a routerLink="/auth/login" class="text-white font-medium">Login</a>
+    }
+  </div>
+</nav>

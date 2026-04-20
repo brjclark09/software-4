@@ -1,0 +1,17 @@
+<div class="flex flex-col items-center mt-16">
+  <h1 class="text-4xl font-bold underline mb-4">WordGame</h1>
+
+  @if (userState.isLoggedIn()) {
+    <p class="text-lg mb-3">Welcome back, {{ userState.user()!.email }}!</p>
+    <a routerLink="/game" class="text-blue-600 hover:underline">Ready to continue playing?</a>
+  } @else {
+    <p class="text-lg mb-3">Welcome to WordGame!</p>
+    <p>
+      Please
+      <a routerLink="/auth/login" class="text-blue-600 hover:underline">log in</a>
+      or
+      <a routerLink="/auth/register" class="text-blue-600 hover:underline">register</a>
+      to play.
+    </p>
+  }
+</div>
