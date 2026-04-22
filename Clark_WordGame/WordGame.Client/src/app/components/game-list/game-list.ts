@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GameplayService, GameDto } from '../../services/gameplay.service';
+import { GameplayService, GameDto } from '../../services/gameplay-service';
 
 @Component({
   selector: 'app-game-list',

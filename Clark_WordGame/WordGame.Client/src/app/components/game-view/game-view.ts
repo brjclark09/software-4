@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { GameplayService, GameDto } from '../../services/gameplay.service';
+import { GameplayService, GameDto } from '../../services/gameplay-service';
 
 @Component({
   selector: 'app-game-view',

@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WordGame.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22e797ea218e0e87954c7d4cf34c7c7c277b6166")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7a4c61a9f265365c00e933454c29fa1399f1729")]
 [assembly: System.Reflection.AssemblyProductAttribute("WordGame.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WordGame.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

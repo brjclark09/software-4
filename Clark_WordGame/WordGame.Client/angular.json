@@ -59,7 +59,8 @@
               "buildTarget": "WordGame.Client:build:production"
             },
             "development": {
-              "buildTarget": "WordGame.Client:build:development"
+              "buildTarget": "WordGame.Client:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

@@ -17,8 +17,8 @@ using WordGame.Server.Data;
 public class AuthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly UrlEncoder _urlEncoder;
     private readonly IConfiguration _config;
     private readonly JwtSettings _jwtSettings;
@@ -26,8 +26,8 @@ public class AuthController : ControllerBase
 
     public AuthController(
         ApplicationDbContext context,
-        UserManager<IdentityUser> userManager,
-        SignInManager<IdentityUser> signInManager,
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
         UrlEncoder urlEncoder,
         IConfiguration config,
         IOptions<JwtSettings> jwtSettings,
@@ -83,27 +83,22 @@ public class AuthController : ControllerBase
 
     [HttpPost("sign-in-with-token")]
     public async Task<IActionResult> SignInWithToken() {
-        // Extract the token from the Authorization header
         var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
         if (token == null) {
             return Unauthorized(new { message = "Token is missing" });
         }
 
-        // Validate the token here (this is a simplified approach)
         var tokenHandler = new JwtSecurityTokenHandler();
         var validationParameters = new TokenValidationParameters {
             ValidateIssuerSigningKey = true,
-            // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"])),
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)),
             ValidateIssuer = true,
-            // ValidIssuer = _config["Jwt:Issuer"],
             ValidIssuer = _jwtSettings.Issuer,
             ValidateAudience = true,
-            // ValidAudience = _config["Jwt:Audience"],
             ValidAudience = _jwtSettings.Audience,
-            ValidateLifetime = true, // Ensure the token hasn't expired
-            ClockSkew = TimeSpan.Zero // Optional: reduce or remove clock skew allowance
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
         };
 
         try {
@@ -125,7 +120,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    private string GenerateJwtToken(IdentityUser user) {
+    private string GenerateJwtToken(ApplicationUser user) {
         if (null == user) {
             throw new ArgumentNullException(nameof(user));
         }
@@ -158,7 +153,7 @@ public class AuthController : ControllerBase
 
     private async Task<AuthResult> RegisterWithEmail(HttpRequest request, EmailLoginDetails details) {
         AuthResult? authResult = new AuthResult();
-        IdentityUser? user = new IdentityUser { UserName = details.Email, Email = details.Email };
+        ApplicationUser? user = new ApplicationUser { UserName = details.Email, Email = details.Email };
         IdentityResult? result = await _userManager.CreateAsync(user, details.Password);
 
         if (!result.Succeeded) {
@@ -169,12 +164,5 @@ public class AuthController : ControllerBase
 
         authResult.Success = true;
         return authResult;
-    }
-
-    [HttpPost("logout")]
-    public async Task<IActionResult> Logout()
-    {
-        await _signInManager.SignOutAsync();
-        return Ok("Logged out successfully.");
     }
 }
