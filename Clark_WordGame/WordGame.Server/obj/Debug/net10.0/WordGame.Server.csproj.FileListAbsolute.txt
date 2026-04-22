@@ -814,4 +814,3 @@ C:/Users/w3031836/Documents/GitHub/software-4/Clark_WordGame/WordGame.Server/obj
 /home/brandon/git/software-4/Clark_WordGame/WordGame.Server/obj/Debug/net10.0/WordGame.Server.pdb
 /home/brandon/git/software-4/Clark_WordGame/WordGame.Server/obj/Debug/net10.0/WordGame.Server.genruntimeconfig.cache
 /home/brandon/git/software-4/Clark_WordGame/WordGame.Server/obj/Debug/net10.0/ref/WordGame.Server.dll
-/home/brandon/git/software-4/Clark_WordGame/WordGame.Server/bin/Debug/net10.0/global.json

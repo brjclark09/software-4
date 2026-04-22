@@ -10,11 +10,13 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private readonly tokenKey = 'accessToken';
-  
+  private readonly emailKey = 'userEmail';
+
   private _http = inject(HttpClient);
   private _router = inject(Router);
 
   public isLoggedIn: WritableSignal<boolean> = signal(this.hasValidToken());
+  public userEmail: WritableSignal<string | null> = signal(localStorage.getItem(this.emailKey));
 
   public set accessToken(token: string) {
     localStorage.setItem(this.tokenKey, token);
@@ -35,6 +37,8 @@ export class AuthService {
       tap((response) => {
         if (response.accessToken) {
           this.accessToken = response.accessToken;
+          localStorage.setItem(this.emailKey, credentials.email);
+          this.userEmail.set(credentials.email);
         }
       }),
     );
@@ -42,7 +46,9 @@ export class AuthService {
 
   public clearToken(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.emailKey);
     this.isLoggedIn.set(false);
+    this.userEmail.set(null);
   }
 
   public hasValidToken(): boolean {
